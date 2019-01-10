@@ -1,0 +1,14 @@
+{
+    "name": "clickandmortar/rekognition-php",
+    "description": "Simple to use PHP library for AWS Rekognition",
+   "license": "MIT",
+    "require": {
+        "php": "^7.2.12",
+        "aws/aws-sdk-php": "^3.82"
+    },
+    "autoload": {
+      "psr-4": {
+        "ClickAndMortar\\Rekognition\\": "src/"
+      }
+    }
+}
