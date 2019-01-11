@@ -13,11 +13,13 @@ use Exception;
  */
 class DetectService
 {
+    const AWS_REGION = 'us-west-2';
+
+    // From https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-rekognition-2016-06-27.html
+    const AWS_REKOGNITION_VERSION = '2016-06-27';
+
     /** @var RekognitionClient */
     protected $rekognitionClient;
-
-    /** @var array */
-    protected $options;
 
     /** @var LabelService */
     protected $labelService;
@@ -28,8 +30,10 @@ class DetectService
     /**
      * @param array $options
      */
-    public function __construct(array $options)
+    public function __construct(array $options = [])
     {
+        $options = $this->buildOptions($options);
+
         $this->rekognitionClient = new RekognitionClient($options);
         $this->setLabelService(new LabelService($this->rekognitionClient));
         $this->setTextService(new TextService($this->rekognitionClient));
@@ -103,5 +107,43 @@ class DetectService
     public function setTextService(TextService $textService): void
     {
         $this->textService = $textService;
+    }
+
+    /**
+     * @param array $options
+     * @return array
+     */
+    protected function buildOptions(array $options): array
+    {
+        $defaultOptions = [
+            'region' => self::AWS_REGION,
+            'version' => self::AWS_REKOGNITION_VERSION,
+        ];
+
+        $environmentOptions = $this->getEnvironmentOptions();
+
+        $options = array_merge($defaultOptions, $environmentOptions, $options);
+
+        return $options;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getEnvironmentOptions(): array
+    {
+        $environmentOptions = [];
+
+        $region = getenv('AWS_REGION');
+        if ($region !== false) {
+            $environmentOptions['region'] = $region;
+        }
+
+        $version = getenv('AWS_REKOGNITION_VERSION');
+        if ($version !== false) {
+            $environmentOptions['version'] = $version;
+        }
+
+        return $environmentOptions;
     }
 }
