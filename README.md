@@ -21,7 +21,27 @@ composer require clickandmortar/rekognition-php
 
 ## Configuration
 
+### Configure credentials
+
 Before using `rekognition-php`, [set credentials to make requests to Amazon Web Services](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html).
+
+### Configure Rekognition client options (Optional)
+
+Configuring Rekognition client options is optional as default values will
+be used if none are set with the following methods.
+
+[region](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_configuration.html#cfg-region)
+and [version](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_configuration.html#cfg-version)
+are configurable using environment variables `AWS_REGION` and
+`AWS_REKOGNITION_VERSION`.
+
+It is also possible to pass this options to `DetectService` constructor:
+```php
+$detectService = new DetectService([
+    'region' => 'eu-west-1',
+    'version' => '2016-06-27',
+]);
+```
 
 ## Usage
 
@@ -40,10 +60,7 @@ $filePointerImage = fopen($filename, 'r');
 $image = fread($filePointerImage, filesize($filename));
 fclose($filePointerImage);
 
-$detectService = new DetectService([
-    'region' => 'us-west-2',
-    'version' => 'latest',
-]);
+$detectService = new DetectService();
 
 $rekognitionImage = $detectService->detect($image);
 $minimumConfidence = 99;
