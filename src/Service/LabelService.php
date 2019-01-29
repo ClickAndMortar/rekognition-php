@@ -59,8 +59,10 @@ class LabelService
      * @param Image $rekognitionImage
      * @return \Aws\Result
      */
-    protected function getResult(Image $rekognitionImage) {
-        return $this->rekognitionClient->detectLabels([
+    protected function getResult(Image $rekognitionImage)
+    {
+        return $this->rekognitionClient->detectLabels(
+            [
                 'Image' => [
                     'Bytes' => $rekognitionImage->getBinaryContent(),
                 ],

@@ -54,8 +54,10 @@ class TextService
      * @param Image $rekognitionImage
      * @return \Aws\Result
      */
-    protected function getResult(Image $rekognitionImage) {
-        return $this->rekognitionClient->detectText([
+    protected function getResult(Image $rekognitionImage)
+    {
+        return $this->rekognitionClient->detectText(
+            [
                 'Image' => [
                     'Bytes' => $rekognitionImage->getBinaryContent(),
                 ],
