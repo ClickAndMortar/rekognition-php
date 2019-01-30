@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ClickAndMortar\Rekognition\Service;
 
-use Aws\Rekognition\Exception\RekognitionException;
 use Aws\Rekognition\RekognitionClient;
 use ClickAndMortar\Rekognition\Image;
 use ClickAndMortar\Rekognition\Label;
@@ -30,29 +29,24 @@ class LabelService
      */
     public function detectLabels(Image $rekognitionImage): void
     {
-        try {
-            $result = $this->getResult($rekognitionImage);
+        $result = $this->getResult($rekognitionImage);
 
-            $labels = [];
-            for ($n = 0; $n < sizeof($result['Labels']); $n++) {
-                $label = new Label();
-                $label->setName($result['Labels'][$n]['Name']);
-                $label->setConfidence($result['Labels'][$n]['Confidence']);
+        $labels = [];
+        for ($n = 0; $n < sizeof($result['Labels']); $n++) {
+            $label = new Label();
+            $label->setName($result['Labels'][$n]['Name']);
+            $label->setConfidence($result['Labels'][$n]['Confidence']);
 
-                $parents = [];
-                foreach ($result['Labels'][$n]['Parents'] as $parent) {
-                    $parents[] = $parent['Name'];
-                }
-
-                $label->setParents($parents);
-                $labels[] = $label;
+            $parents = [];
+            foreach ($result['Labels'][$n]['Parents'] as $parent) {
+                $parents[] = $parent['Name'];
             }
 
-            $rekognitionImage->setLabels($labels);
-        } catch (RekognitionException $rekognitionException) {
-            print $rekognitionException->getAwsErrorMessage();
-            print PHP_EOL;
+            $label->setParents($parents);
+            $labels[] = $label;
         }
+
+        $rekognitionImage->setLabels($labels);
     }
 
     /**
