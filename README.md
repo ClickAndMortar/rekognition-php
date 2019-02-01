@@ -1,16 +1,20 @@
 # rekognition-php
 
-Simple to use PHP library for [AWS Rekognition](https://aws.amazon.com/rekognition/)
+Simple to use PHP library for [AWS Rekognition](https://aws.amazon.com/rekognition/).
 
-`rekognition-php` allows to retrieve from an image:
+![Rekognition PHP Logo](https://raw.githubusercontent.com/ClickAndMortar/rekognition-php/master/rekognition-php-logo.png)
 
-- Labels (using [DetectLabels](https://docs.aws.amazon.com/rekognition/latest/dg/API_DetectLabels.html))
+`rekognition-php` allows to detect in images:
+
+- **Labels** (using [DetectLabels](https://docs.aws.amazon.com/rekognition/latest/dg/API_DetectLabels.html))
+
  > Detects instances of real-world entities within an image (JPEG or PNG)
  provided as input. This includes objects like flower, tree, and table;
  events like wedding, graduation, and birthday party;
  and concepts like landscape, evening, and nature.
 
-- Text (using [DetectText](https://docs.aws.amazon.com/rekognition/latest/dg/API_DetectText.html))
+- **Text** (using [DetectText](https://docs.aws.amazon.com/rekognition/latest/dg/API_DetectText.html))
+
 > Detects text in the input image and converts it into machine-readable text.
 
 ## Install
@@ -163,11 +167,13 @@ $rekognitionImage = $detectService->detectFromBase64($base64image);
 ### Run using docker-compose
 
 Copy dist file:
+
 ```shell
 cp docker-compose.dist.yml docker-compose.yml
 ```
 
 Edit in `docker-compose.yml` the following lines:
+
 ```yml
 environment:
   -  AWS_ACCESS_KEY_ID=your_aws_access_key_id
@@ -181,6 +187,7 @@ to authenticate to Amazon Web Services
 Create `main.php` with code from [Usage](#usage).
 
 Run:
+
 ```shell
 docker-compose run composer php main.php
 ```
