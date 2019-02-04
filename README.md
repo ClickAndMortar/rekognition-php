@@ -175,5 +175,5 @@ docker run --rm -it -v $PWD:/app composer install
 Create `main.php` with code from [Usage](#usage).
 
 ```shell
-docker run --rm -it -v "$PWD":/app -w /app php:7.1-cli php main.php
+docker run --rm -it -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" -v "$PWD":/app -w /app php:7.1-cli php main.php
 ```
