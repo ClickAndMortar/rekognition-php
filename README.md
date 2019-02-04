@@ -162,6 +162,12 @@ $base64image = base64_encode($image);
 $rekognitionImage = $detectService->detectFromBase64($base64image);
 ```
 
+## Run tests
+
+```shell
+vendor/bin/phpunit
+```
+
 ## Docker
 
 ### Install
@@ -176,4 +182,10 @@ Create `main.php` with code from [Usage](#usage).
 
 ```shell
 docker run --rm -it -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" -v "$PWD":/app -w /app php:7.1-cli php main.php
+```
+
+### Run tests
+
+```shell
+docker run --rm -it -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" -v "$PWD":/app -w /app php:7.1-cli vendor/bin/phpunit
 ```
