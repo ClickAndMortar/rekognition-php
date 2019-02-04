@@ -10,5 +10,10 @@
       "psr-4": {
         "ClickAndMortar\\Rekognition\\": "src/"
       }
+    },
+    "config": {
+        "platform": {
+            "php": "7.1"
+        }
     }
 }

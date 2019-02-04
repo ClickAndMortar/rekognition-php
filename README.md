@@ -164,30 +164,16 @@ $rekognitionImage = $detectService->detectFromBase64($base64image);
 
 ## Docker
 
-### Run using docker-compose
-
-Copy dist file:
+### Install
 
 ```shell
-cp docker-compose.dist.yml docker-compose.yml
+docker run --rm -it -v $PWD:/app composer install
 ```
 
-Edit in `docker-compose.yml` the following lines:
-
-```yml
-environment:
-  -  AWS_ACCESS_KEY_ID=your_aws_access_key_id
-  -  AWS_SECRET_ACCESS_KEY=your_secret_access_key
-```
-
-This will allow to
-[use credentials from environment variables](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_environment.html)
-to authenticate to Amazon Web Services
+### Run
 
 Create `main.php` with code from [Usage](#usage).
 
-Run:
-
 ```shell
-docker-compose run composer php main.php
+docker run --rm -it -v "$PWD":/app -w /app php:7.1-cli php main.php
 ```
