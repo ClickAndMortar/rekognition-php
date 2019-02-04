@@ -13,6 +13,11 @@ jobs:
 
     steps:
       - checkout
+      - run:
+          name: "Setup dummy aws credentials (needed for tests)"
+          command: |
+            echo 'export AWS_ACCESS_KEY_ID="FOO"' >> $BASH_ENV |
+            echo 'export AWS_SECRET_ACCESS_KEY="BAR"' >> $BASH_ENV
 
       # Download and cache dependencies
       - restore_cache:
