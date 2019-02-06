@@ -17,6 +17,8 @@ Simple to use PHP library for [AWS Rekognition](https://aws.amazon.com/rekogniti
 
 > Detects text in the input image and converts it into machine-readable text.
 
+![](img/tshirt.png) ![](img/demo.png)
+
 ## Install
 
 ```shell
@@ -49,8 +51,8 @@ $detectService = new DetectService([
 
 ## Usage
 
-Using this [image](https://docs.aws.amazon.com/rekognition/latest/dg/images/text.png)
-with the following code:
+The following code will allow to retrieve the output from
+previous picture:
 
 ```php
 <?php
@@ -59,7 +61,7 @@ use ClickAndMortar\Rekognition\Service\DetectService;
 
 require 'vendor/autoload.php';
 
-$filename = 'text.png';
+$filename = 'img/demo.png';
 $filePointerImage = fopen($filename, 'r');
 $image = fread($filePointerImage, filesize($filename));
 fclose($filePointerImage);
@@ -67,14 +69,12 @@ fclose($filePointerImage);
 $detectService = new DetectService();
 
 $rekognitionImage = $detectService->detect($image);
-$minimumConfidence = 99;
+$minimumConfidence = 80;
 
 print 'Labels:' . PHP_EOL;
 foreach ($rekognitionImage->getLabels($minimumConfidence) as $label) {
     print $label;
 }
-
-print PHP_EOL;
 
 print 'Texts:' . PHP_EOL;
 foreach ($rekognitionImage->getTexts($minimumConfidence) as $text) {
@@ -83,75 +83,16 @@ foreach ($rekognitionImage->getTexts($minimumConfidence) as $text) {
 
 ```
 
-will output:
-
-```
-Labels:
-Name: Coffee Cup
-Confidence: 99.859184265137
-Parent Name: Cup
-
-Name: Drink
-Confidence: 99.859184265137
-
-Name: Latte
-Confidence: 99.859184265137
-Parent Name: Coffee Cup
-Parent Name: Cup
-Parent Name: Beverage
-
-Name: Cup
-Confidence: 99.859184265137
-
-Name: Beverage
-Confidence: 99.859184265137
-
-
-Texts:
-DetectedText: IT'S
-Confidence: 99.438377380371
-Type: LINE
-
-DetectedText: but keep
-Confidence: 99.750549316406
-Type: LINE
-
-DetectedText: Smiling
-Confidence: 99.789009094238
-Type: LINE
-
-DetectedText: IT'S
-Confidence: 99.438377380371
-Type: WORD
-
-DetectedText: MONDAY
-Confidence: 99.98274230957
-Type: WORD
-
-DetectedText: but
-Confidence: 99.655982971191
-Type: WORD
-
-DetectedText: keep
-Confidence: 99.845115661621
-Type: WORD
-
-DetectedText: Smiling
-Confidence: 99.789009094238
-Type: WORD
-
-```
-
-Output will be the same if
+Output will be the same if:
 
 ```php
 $rekognitionImage = $detectService->detect($image);
 ```
 
-is replaced with
+is replaced with:
 
 ```php
-$url = 'https://docs.aws.amazon.com/rekognition/latest/dg/images/text.png';
+$url = 'https://raw.githubusercontent.com/ClickAndMortar/rekognition-php/master/img/demo.png';
 $rekognitionImage = $detectService->detectFromUrl($url);
 ```
 
