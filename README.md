@@ -17,7 +17,7 @@ Simple to use PHP library for [AWS Rekognition](https://aws.amazon.com/rekogniti
 
 > Detects text in the input image and converts it into machine-readable text.
 
-![](img/tshirt.png) ![](img/demo.png)
+![](img/tshirt.png) ![](img/terminal-output.png)
 
 ## Install
 
@@ -31,24 +31,6 @@ composer require clickandmortar/rekognition-php
 
 Before using `rekognition-php`, [set credentials to make requests to Amazon Web Services](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials.html).
 
-### Configure Rekognition client options (Optional)
-
-Configuring Rekognition client options is optional as default values will
-be used if none are set with the following methods.
-
-[region](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_configuration.html#cfg-region)
-and [version](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_configuration.html#cfg-version)
-are configurable using environment variables `AWS_REGION` and
-`AWS_REKOGNITION_VERSION`.
-
-It is also possible to pass this options to `DetectService` constructor:
-```php
-$detectService = new DetectService([
-    'region' => 'eu-west-1',
-    'version' => '2016-06-27',
-]);
-```
-
 ## Usage
 
 The following code will allow to retrieve the output from
@@ -61,14 +43,10 @@ use ClickAndMortar\Rekognition\Service\DetectService;
 
 require 'vendor/autoload.php';
 
-$filename = 'img/demo.png';
-$filePointerImage = fopen($filename, 'r');
-$image = fread($filePointerImage, filesize($filename));
-fclose($filePointerImage);
-
 $detectService = new DetectService();
 
-$rekognitionImage = $detectService->detect($image);
+$url = 'https://raw.githubusercontent.com/ClickAndMortar/rekognition-php/master/img/tshirt.png';
+$rekognitionImage = $detectService->detectFromUrl($url);
 $minimumConfidence = 80;
 
 print 'Labels:' . PHP_EOL;
@@ -86,21 +64,51 @@ foreach ($rekognitionImage->getTexts($minimumConfidence) as $text) {
 Output will be the same if:
 
 ```php
-$rekognitionImage = $detectService->detect($image);
+$url = 'https://raw.githubusercontent.com/ClickAndMortar/rekognition-php/master/img/tshirt.png';
+$rekognitionImage = $detectService->detectFromUrl($url);
 ```
 
 is replaced with:
 
 ```php
-$url = 'https://raw.githubusercontent.com/ClickAndMortar/rekognition-php/master/img/demo.png';
-$rekognitionImage = $detectService->detectFromUrl($url);
+$filename = 'img/tshirt.png';
+$handle = fopen($filename, 'r');
+$image = fread($handle, filesize($filename));
+fclose($handle);
+
+$rekognitionImage = $detectService->detect($image);
 ```
 
 or
 
 ```php
+$filename = 'img/tshirt.png';
+$handle = fopen($filename, 'r');
+$image = fread($handle, filesize($filename));
+fclose($handle);
+
 $base64image = base64_encode($image);
 $rekognitionImage = $detectService->detectFromBase64($base64image);
+```
+
+## Advanced configuration (Optional)
+
+### Configure Rekognition client options
+
+Configuring Rekognition client options is optional as default values will
+be used if none are set with the following methods.
+
+[region](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_configuration.html#cfg-region)
+and [version](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_configuration.html#cfg-version)
+are configurable using environment variables `AWS_REGION` and
+`AWS_REKOGNITION_VERSION`.
+
+It is also possible to pass this options to `DetectService` constructor:
+```php
+$detectService = new DetectService([
+    'region' => 'eu-west-1',
+    'version' => '2016-06-27',
+]);
 ```
 
 ## Run tests
