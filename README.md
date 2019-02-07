@@ -1,10 +1,12 @@
-# rekognition-php
+![Rekognition PHP Logo](img/rekognition-php-logo.png)
 
-Simple to use PHP library for [AWS Rekognition](https://aws.amazon.com/rekognition/).
+# Rekognition PHP - C&M
 
-![Rekognition PHP Logo](https://raw.githubusercontent.com/ClickAndMortar/rekognition-php/master/rekognition-php-logo.png)
+> Simple to use PHP library for [AWS Rekognition](https://aws.amazon.com/rekognition/).
 
-`rekognition-php` allows to detect in images:
+[![CircleCI](https://circleci.com/gh/ClickAndMortar/rekognition-php.svg?style=svg)](https://circleci.com/gh/ClickAndMortar/rekognition-php)
+
+`Rekognition PHP` allows to detect in images:
 
 - **Labels** (using [DetectLabels](https://docs.aws.amazon.com/rekognition/latest/dg/API_DetectLabels.html))
 
@@ -19,7 +21,7 @@ Simple to use PHP library for [AWS Rekognition](https://aws.amazon.com/rekogniti
 
 ![](img/tshirt.png) ![](img/terminal-output.png)
 
-## Install
+## Installation
 
 ```shell
 composer require clickandmortar/rekognition-php
@@ -111,7 +113,9 @@ $detectService = new DetectService([
 ]);
 ```
 
-## Run tests
+## Tests
+
+### Run tests
 
 ```shell
 vendor/bin/phpunit
@@ -119,7 +123,7 @@ vendor/bin/phpunit
 
 ## Docker
 
-### Install
+### Installation
 
 ```shell
 docker run --rm -it -v $PWD:/app composer install
