@@ -18,6 +18,27 @@ class DetectService
     // From https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-rekognition-2016-06-27.html
     const AWS_REKOGNITION_VERSION = '2016-06-27';
 
+    /**
+     * Detect both text and labels
+     * @var string
+     */
+    const DETECT_BOTH = 'detect_both';
+
+    /**
+     * Detect text only
+     * @var string
+     */
+    const DETECT_TEXT = 'detect_text';
+
+    /**
+     * Detect labels only
+     * @var string
+     */
+    const DETECT_LABEL = 'detect_label';
+
+    /** @var string */
+    protected $detectMode;
+
     /** @var RekognitionClient */
     protected $rekognitionClient;
 
@@ -34,9 +55,22 @@ class DetectService
     {
         $options = $this->buildOptions($options);
 
+        $this->detectMode = self::DETECT_BOTH;
+
         $this->rekognitionClient = new RekognitionClient($options);
         $this->setLabelService(new LabelService($this->rekognitionClient));
         $this->setTextService(new TextService($this->rekognitionClient));
+    }
+
+    /**
+     * Set detection mode, default is to detect both
+     * labels and text.
+     *
+     * @param string $mode
+     */
+    public function setDetectMode($mode): void
+    {
+        $this->detectMode = $mode;
     }
 
     /**
@@ -45,12 +79,22 @@ class DetectService
      */
     public function detect(string $binaryContent): Image
     {
-        $rekognitionImage = new Image($binaryContent);
+        $rekognitionImage = new Image;
+        $rekognitionImage->setBinaryContent($binaryContent);
 
-        $this->labelService->detectLabels($rekognitionImage);
-        $this->textService->detectText($rekognitionImage);
+        return $this->handleDetection($rekognitionImage);
+    }
 
-        return $rekognitionImage;
+    /**
+     * @param string $s3Url
+     * @return Image
+     */
+    public function detectFromS3(string $s3Url): Image
+    {
+        $rekognitionImage = new Image;
+        $rekognitionImage->setUrlContent($s3Url);
+
+        return $this->handleDetection($rekognitionImage);
     }
 
     /**
@@ -60,6 +104,9 @@ class DetectService
      */
     public function detectFromUrl(string $url): Image
     {
+        if (strpos($url, 's3.amazonaws.com') !== false) {
+            return $this->detectFromS3($url);
+        }
         $binaryContent = @file_get_contents($url);
 
         if ($binaryContent === false) {
@@ -145,5 +192,22 @@ class DetectService
         }
 
         return $environmentOptions;
+    }
+
+    /**
+     * Run detection, respecting mode
+     * @param Image $image
+     * @return Image
+     */
+    private function handleDetection(Image $image): Image
+    {
+        if ($this->detectMode == self::DETECT_BOTH || $this->detectMode == self::DETECT_LABEL) {
+            $this->labelService->detectLabels($image);
+        }
+        if ($this->detectMode == self::DETECT_BOTH || $this->detectMode == self::DETECT_TEXT) {
+            $this->textService->detectText($image);
+        }
+
+        return $image;
     }
 }
