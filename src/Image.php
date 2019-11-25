@@ -12,6 +12,9 @@ class Image
     /** @var string */
     private $binaryContent;
 
+    /** @var string */
+    private $urlContent;
+
     /** @var Label[] */
     private $labels = [];
 
@@ -19,17 +22,9 @@ class Image
     private $texts = [];
 
     /**
-     * @param string $binaryContent
-     */
-    public function __construct(string $binaryContent)
-    {
-        $this->setBinaryContent($binaryContent);
-    }
-
-    /**
      * @return string
      */
-    public function getBinaryContent(): string
+    public function getBinaryContent(): ?string
     {
         return $this->binaryContent;
     }
@@ -40,6 +35,16 @@ class Image
     public function setBinaryContent(string $binaryContent): void
     {
         $this->binaryContent = $binaryContent;
+    }
+
+    public function getUrlContent(): ?string
+    {
+        return $this->urlContent;
+    }
+
+    public function setUrlContent(string $urlContent): void
+    {
+        $this->urlContent = $urlContent;
     }
 
     /**

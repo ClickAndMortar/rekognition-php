@@ -50,10 +50,33 @@ class TextService
      */
     protected function getResult(Image $rekognitionImage)
     {
-        return $this->rekognitionClient->detectText(
+        if ($rekognitionImage->getBinaryContent()) {
+            return $this->rekognitionClient->detectText(
+                [
+                    'Image' => [
+                        'Bytes' => $rekognitionImage->getBinaryContent(),
+                    ],
+                    'Attributes' => ['ALL']
+                ]
+            );
+        }
+
+        $url = $rekognitionImage->getUrlContent();
+        $parts = explode('s3.amazonaws.com', $url);
+        if (!count($parts)) {
+            throw new \Exception('Unable to parse S3 url');
+        }
+
+        $bucket = trim(substr($parts[1], 0, strpos($parts[1], '/', 1)), '/');
+        $name = substr($parts[1], (strpos($parts[1], '/', 1) + 1));
+
+        return $this->rekognitionClient->detectLabels(
             [
                 'Image' => [
-                    'Bytes' => $rekognitionImage->getBinaryContent(),
+                    'S3Object' => [
+                        'Bucket' => $bucket,
+                        'Name' => $name
+                    ]
                 ],
                 'Attributes' => ['ALL']
             ]
